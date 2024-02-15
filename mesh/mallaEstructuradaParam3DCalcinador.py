@@ -148,7 +148,8 @@ gmsh.option.setNumber('Mesh.SurfaceFaces', 1)
 gmsh.option.setNumber('Mesh.Points', 1)        
 
 # Y finalmente guardar la malla
-filename = 'calcinadorPrueba01.msh'
+gmsh.option.setNumber("Mesh.MshFileVersion",2.2)  
+filename = 'calciner.msh'
 gmsh.write(filename)
 
 # Podemos visualizar el resultado en la interfaz gráfica de GMSH
