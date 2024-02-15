@@ -9,6 +9,14 @@ gmsh.model.add("calcinador")
 front = 4.0
 back = -4.0
 
+# Estructurar la malla
+allSurfaceXMesh = 60 #Control mesh in X direction in all surfaces
+structureYMesh = 60 #Control mesh in Y direction in structure |    |
+roofYMesh = 30 #Control mesh in Y direction in rook /    \
+nozzleYMesh = 10 #Control mesh in Y direction in nozzle \ /
+fireplaceYMesh = 20 # Control mesh in Y direction in fireplace |  |
+z = 40 #Control mesh in Z direction 
+
 #Definir puntos
 gmsh.model.geo.addPoint(0.0, 4.0, front, 1, 1)
 gmsh.model.geo.addPoint(20.0, 0.0, front, 1, 2)
@@ -45,24 +53,20 @@ gmsh.model.geo.addCurveLoop([3, 4, 5, -7], 2)
 gmsh.model.geo.addCurveLoop([8, 9, 10, -4], 3)
 gmsh.model.geo.addCurveLoop([11, 12, 13, -9], 4)
 
+for tag in [6, -2]:
+    gmsh.model.geo.mesh.setTransfiniteCurve(tag, structureYMesh+1)
 
-# Estructurar la malla
-m = 60
-n = 40
-l = 10
-d = 20
-
-for tag in [6, -2, 5, -3, 13, -11]:
-    gmsh.model.geo.mesh.setTransfiniteCurve(tag, n+1)
-
-for tag in [13, -11]:
-    gmsh.model.geo.mesh.setTransfiniteCurve(tag, d+1)
+for tag in [5, -3]:
+    gmsh.model.geo.mesh.setTransfiniteCurve(tag, roofYMesh+1)
 
 for tag in [10, -8]:
-    gmsh.model.geo.mesh.setTransfiniteCurve(tag, l+1)
+    gmsh.model.geo.mesh.setTransfiniteCurve(tag, nozzleYMesh+1)
+
+for tag in [13, -11]:
+    gmsh.model.geo.mesh.setTransfiniteCurve(tag, fireplaceYMesh+1)
 
 for tag in [1, -7, -4, -9, -12]:
-    gmsh.model.geo.mesh.setTransfiniteCurve(tag, m+1)
+    gmsh.model.geo.mesh.setTransfiniteCurve(tag, allSurfaceXMesh+1)
 
 
 # Superficie
@@ -84,10 +88,10 @@ gmsh.model.geo.mesh.setRecombine(2, 3)
 gmsh.model.geo.mesh.setRecombine(2, 4)
 
 # Extruimos las superficies [(superficie, tag)]
-vol_ext1 = gmsh.model.geo.extrude([(2, 1)], 0, 0, back, numElements=[30], recombine=True)
-vol_ext2 = gmsh.model.geo.extrude([(2, 2)], 0, 0, back, numElements=[30], recombine=True)
-tobera = gmsh.model.geo.extrude([(2, 3)], 0, 0, back, numElements=[30], recombine=True)
-ducto = gmsh.model.geo.extrude([(2, 4)], 0, 0, back, numElements=[30], recombine=True)
+vol_ext1 = gmsh.model.geo.extrude([(2, 1)], 0, 0, back, numElements=[z], recombine=True)
+vol_ext2 = gmsh.model.geo.extrude([(2, 2)], 0, 0, back, numElements=[z], recombine=True)
+tobera = gmsh.model.geo.extrude([(2, 3)], 0, 0, back, numElements=[z], recombine=True)
+ducto = gmsh.model.geo.extrude([(2, 4)], 0, 0, back, numElements=[z], recombine=True)
 
 
 # Estoy tomando el tag de un diccionario
@@ -108,7 +112,7 @@ gmsh.model.addPhysicalGroup(2, [92], 3)
 gmsh.model.setPhysicalName(2, 3, "outlet")
 
 gmsh.model.addPhysicalGroup(2, [26, 44, 66, 88, 96, 74, 52, 34], 1)
-gmsh.model.setPhysicalName(2, 1, "wall") 
+gmsh.model.setPhysicalName(2, 1, "walls") 
 
 gmsh.model.addPhysicalGroup(2, [1, 2, 3, 4], 4)
 gmsh.model.setPhysicalName(2, 4, "front")
