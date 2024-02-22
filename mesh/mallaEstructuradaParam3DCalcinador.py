@@ -28,7 +28,6 @@ fireplaceYMesh  = np.int32(simData.loc["mallaS4"]['Value'])    # Control mesh in
 z  = np.int32(simData.loc["profun"]['Value'])                 # Control mesh in Z direction 
 
 
-
 gmsh.initialize()
 gmsh.option.setNumber("General.Terminal",1)
 gmsh.model.add("calcinador")
@@ -96,6 +95,7 @@ gmsh.model.geo.mesh.setRecombine(2, 3)
 gmsh.model.geo.mesh.setRecombine(2, 4)
 
 # Extruimos las superficies [(superficie, tag)]
+# Recombine es para hacer la malla estructurada cuadrilátera en el volumen
 vol_ext1 = gmsh.model.geo.extrude([(2, 1)], 0, 0, back, numElements=[z], recombine=True)
 vol_ext2 = gmsh.model.geo.extrude([(2, 2)], 0, 0, back, numElements=[z], recombine=True)
 tobera = gmsh.model.geo.extrude([(2, 3)], 0, 0, back, numElements=[z], recombine=True)
@@ -128,11 +128,6 @@ gmsh.model.setPhysicalName(2, 4, "front")
 gmsh.model.addPhysicalGroup(2, [35, 57, 79, 101], 5)
 gmsh.model.setPhysicalName(2, 5, "back")
 
-
-
-#gmsh.model.addPhysicalGroup(2, [24], 6)
-#gmsh.model.setPhysicalName(2, 6, "interphase")
-
 #----
 # Cuando se hacen mallas estrcturada, la sincronización se da después del recombine
 #----
@@ -147,7 +142,8 @@ gmsh.option.setNumber('Mesh.SurfaceFaces', 1)
 # Ver los nodos de la malla  
 gmsh.option.setNumber('Mesh.Points', 1)        
 
-# Y finalmente guardar la malla
+# Y finalmente guardar la malla, usando ASCII v2.2 
+# Importante porque esa es la única versión que puede interpretar OF
 gmsh.option.setNumber("Mesh.MshFileVersion",2.2)  
 filename = 'calciner.msh'
 gmsh.write(filename)
