@@ -19,7 +19,7 @@ p9x,        5.0,     Posición x del punto 09
 p9y,	    18.0,    Posición y del punto 09
 p10x,       5.0,     Posición x del punto 10
 p10y,       22.0,    Posición y del punto 10
-front,      6.0,     Posicion superficie delantera
+front,      0.0,     Posicion superficie delantera
 back,       6.0,     Posicion superficie trasera
 mallaX,     60.0,    Malla en direccion X para todas las super
 mallaS1,    60.0,    Malla en direccion Y estructura
